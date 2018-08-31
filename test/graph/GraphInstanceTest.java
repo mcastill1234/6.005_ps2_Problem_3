@@ -60,6 +60,8 @@ public abstract class GraphInstanceTest {
     private static final String vertex2 = "V2";
     private static final String vertex3 = "V3";
     private static final String vertex4 = "V4";
+    private static final int vertex5 = 1;
+    private static final int vertex6 = 2;
 
     private static final int weight0 = 0;
     private static final int weight1 = 1;

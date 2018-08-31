@@ -54,6 +54,8 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
     private final String vertex1 = "V1";
     private final String vertex2 = "V";
     private final String vertex3 = "";
+    private final int vertex4 = 1;
+    private final int vertex5 = 2;
 
     private final int weight1 = 1;
     private final int weight2 = 2;

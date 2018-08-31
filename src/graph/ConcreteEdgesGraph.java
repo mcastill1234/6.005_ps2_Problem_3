@@ -18,7 +18,7 @@ import java.util.*;
 public class ConcreteEdgesGraph<L> implements Graph<L> {
     
     private final Set<L> vertices = new HashSet<>();
-    private final List<Edge> edges = new ArrayList<>();
+    private final List<Edge<L>> edges = new ArrayList<>();
     
     // Abstraction function:
     //   Represents a mutable weighted directed graph with labeled vertices
@@ -42,8 +42,6 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         if (edges.size() > 1) {
             for (int i=0; i<edges.size(); i++) {
                 for (int j=0; j<edges.size(); j++) {
-                    Edge temp1 = edges.get(0);
-                    Edge temp2 = edges.get(1);
                     if (i != j && edges.get(i).getSource() == edges.get(j).getSource() &&
                             edges.get(i).getTarget() == edges.get(j).getTarget()) {
                         return false;
@@ -80,7 +78,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
     public int set(L source, L target, int weight) {
         if (weight == 0) {
             if (isEdgeInGraph(source, target)) {
-                Edge edgeToSet = findEdge(source, target);
+                Edge<L> edgeToSet = findEdge(source, target);
                 int result = edgeToSet.getWeight();
                 edges.remove(edgeToSet);
                 checkRep();
@@ -93,7 +91,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         }
         else {
             if (isEdgeInGraph(source, target)) {
-                Edge edgeToSet = findEdge(source, target);
+                Edge<L> edgeToSet = findEdge(source, target);
                 int result = edgeToSet.getWeight();
                 edges.remove(edgeToSet);
                 edges.add(new Edge(source, target, weight));
@@ -117,7 +115,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
      * @return true if edge is in list of edges, false otherwise
      */
     private boolean isEdgeInGraph(L source, L target) {
-        for (Edge edge : edges) {
+        for (Edge<L> edge : edges) {
             if (edge.getSource().equals(source) && edge.getTarget().equals(target)){
                 return true;
             }
@@ -132,7 +130,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
      * @return edge if it's in list of edges, empty edge if it isn't
      */
     private Edge<L> findEdge(L source, L target) {
-        for (Edge edge : edges) {
+        for (Edge<L> edge : edges) {
             if (edge.getSource().equals(source) && edge.getTarget().equals(target)) {
                 return edge;
             }

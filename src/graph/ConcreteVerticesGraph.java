@@ -61,7 +61,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         if (weight > 0) {
             if (!hasVertex(source)) vertices.add(new Vertex(source));
             if (!hasVertex(target)) vertices.add(new Vertex(target));
-            for (Vertex testVertex : vertices) {
+            for (Vertex<L> testVertex : vertices) {
                 if (testVertex.getName() == source) {
                     if (testVertex.isVertexInTargets(target)) {
                         result = testVertex.getWeight(target);
@@ -73,7 +73,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
             }
         } else if (weight == 0) {
             if(hasVertex(source)) {
-                for (Vertex testVertex : vertices) {
+                for (Vertex<L> testVertex : vertices) {
                     if (testVertex.getName() == source && testVertex.getTargets().contains(target)) {
                         result = testVertex.getWeight(target);
                         testVertex.setTarget(target, weight);
