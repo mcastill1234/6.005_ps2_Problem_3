@@ -3,8 +3,12 @@
  */
 package poet;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import graph.Graph;
 
@@ -55,11 +59,17 @@ public class GraphPoet {
     private final Graph<String> graph = Graph.empty();
     
     // Abstraction function:
-    //   TODO
+    //  GraphPoet consists of a Graph<String> such that vertices are case-insensitive words and edge weights are
+    //  in order adjacency counts of at least 1
     // Representation invariant:
-    //   TODO
+    //   - vertices must be lowercase
+    //   - all edge weights are >= 1
+    //   - all vertices in graph must belong to at least one edge
+    //   - the input corpus file can't be blank
+    //   - the input corpus file must contain at least two different words
     // Safety from rep exposure:
-    //   TODO
+    //   - word affinity graph is private and final
+    //   - vertices are of type String, which is immutable
     
     /**
      * Create a new poet with the graph from corpus (as described above).
@@ -68,7 +78,43 @@ public class GraphPoet {
      * @throws IOException if the corpus file cannot be found or read
      */
     public GraphPoet(File corpus) throws IOException {
-        throw new RuntimeException("not implemented");
+
+        Scanner corpusReader = null;
+        boolean startOfFile = true;
+        String previousWord = "";
+        int previousWeight = 0;
+
+        try {
+            corpusReader = new Scanner(new BufferedReader(new FileReader(corpus)));
+
+            while (corpusReader.hasNext()) {
+                String newWord = corpusReader.next();
+                newWord = newWord.replaceAll("[^-A-Za-z0-9_]", "").toLowerCase();
+                if (startOfFile && newWord != "") {
+                    graph.add(newWord);
+                    previousWord = newWord;
+                }
+                else if (newWord != "") {
+                    graph.add(newWord);
+                    if (graph.sources(newWord).containsKey(previousWord)) {
+                        previousWeight = graph.sources(newWord).get(previousWord);
+                        graph.set(previousWord, newWord, previousWeight ++);
+                        previousWord = newWord;
+                    }
+                    else {
+                        graph.set(previousWord, newWord, 1);
+                        previousWord = newWord;
+                    }
+                }
+                startOfFile = false;
+            }
+        } finally {
+            if (corpusReader != null) {
+                corpusReader.close();
+            }
+        }
+
+
     }
     
     // TODO checkRep
