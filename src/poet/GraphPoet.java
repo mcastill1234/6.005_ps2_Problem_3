@@ -4,12 +4,7 @@
 package poet;
 
 import java.io.*;
-import java.util.Scanner;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import java.util.*;
 import graph.Graph;
 
 /**
@@ -62,11 +57,8 @@ public class GraphPoet {
     //  GraphPoet consists of a Graph<String> such that vertices are case-insensitive words and edge weights are
     //  in order adjacency counts of at least 1
     // Representation invariant:
-    //   - vertices must be lowercase
-    //   - all edge weights are >= 1
-    //   - all vertices in graph must belong to at least one edge
-    //   - the input corpus file can't be blank
-    //   - the input corpus file must contain at least two different words
+    //   - We assume that Graph ADT preserves its own invariant, this class only returns a string and
+    //     does not exposes any rep.
     // Safety from rep exposure:
     //   - word affinity graph is private and final
     //   - vertices are of type String, which is immutable
@@ -82,23 +74,23 @@ public class GraphPoet {
         Scanner corpusReader = null;
         boolean startOfFile = true;
         String previousWord = "";
-        int previousWeight = 0;
+        int previousWeight;
 
         try {
             corpusReader = new Scanner(new BufferedReader(new FileReader(corpus)));
 
             while (corpusReader.hasNext()) {
                 String newWord = corpusReader.next();
-                newWord = newWord.replaceAll("[^-A-Za-z0-9_]", "").toLowerCase();
-                if (startOfFile && newWord != "") {
+                newWord = newWord.toLowerCase();
+                if (startOfFile && !newWord.equals("")) {
                     graph.add(newWord);
                     previousWord = newWord;
                 }
-                else if (newWord != "") {
+                else if (!newWord.equals("")) {
                     graph.add(newWord);
                     if (graph.sources(newWord).containsKey(previousWord)) {
                         previousWeight = graph.sources(newWord).get(previousWord);
-                        graph.set(previousWord, newWord, previousWeight ++);
+                        graph.set(previousWord, newWord, ++previousWeight);
                         previousWord = newWord;
                     }
                     else {
@@ -113,11 +105,7 @@ public class GraphPoet {
                 corpusReader.close();
             }
         }
-
-
     }
-    
-    // TODO checkRep
     
     /**
      * Generate a poem.
@@ -126,9 +114,60 @@ public class GraphPoet {
      * @return poem (as described above)
      */
     public String poem(String input) {
-        throw new RuntimeException("not implemented");
+
+        String outputPoem = "";
+
+        List<String> inputAsList = new ArrayList<>(Arrays.asList(input.split(" ")));
+        inputAsList.removeAll(new HashSet<>(Arrays.asList("")));
+
+        String previousWord = "";
+
+        for (String currentWord : inputAsList) {
+
+            boolean addedBridge = false;
+
+            if (inputAsList.indexOf(currentWord) == 0) {
+                outputPoem += currentWord;
+            }
+
+            else {
+                String previousWordLC = previousWord.toLowerCase();
+                String currentWordLC = currentWord.toLowerCase();
+
+                boolean pwInGraph = graph.vertices().contains(previousWordLC);
+                boolean cwInGraph = graph.vertices().contains(currentWordLC);
+
+                Set<String> targetsOfpw = graph.targets(previousWordLC).keySet();
+                Set<String> sourcesOfcw = graph.sources(currentWordLC).keySet();
+
+                for (String bridgeWord : targetsOfpw) {
+
+                    boolean foundBridge = sourcesOfcw.contains(bridgeWord);
+
+                    if (pwInGraph && cwInGraph && foundBridge) {
+                        outputPoem += " ";
+                        outputPoem += bridgeWord;
+                        outputPoem += " ";
+                        outputPoem += currentWord;
+
+                        addedBridge = true;
+                        break;
+                    }
+                }
+
+                if (!addedBridge) {
+                    outputPoem += " ";
+                    outputPoem += currentWord;
+                }
+            }
+            previousWord = currentWord;
+        }
+        return outputPoem;
     }
-    
-    // TODO toString()
-    
+
+    @Override
+    public String toString() {
+        return graph.toString();
+    }
+
 }

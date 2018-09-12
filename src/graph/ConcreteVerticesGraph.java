@@ -35,7 +35,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         if (vertices.size() > 1) {
             for (int i = 0; i < vertices.size(); i++) {
                 for (int j=0; j < vertices.size(); j++) {
-                    if (i != j && vertices.get(i).getName() == vertices.get(j).getName()) {
+                    if (i != j && vertices.get(i).getName().equals(vertices.get(j).getName())) {
                         return false;
                     }
                 }
@@ -62,7 +62,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
             if (!hasVertex(source)) vertices.add(new Vertex(source));
             if (!hasVertex(target)) vertices.add(new Vertex(target));
             for (Vertex<L> testVertex : vertices) {
-                if (testVertex.getName() == source) {
+                if (testVertex.getName().equals(source)) {
                     if (testVertex.isVertexInTargets(target)) {
                         result = testVertex.getWeight(target);
                     }
@@ -74,7 +74,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         } else if (weight == 0) {
             if(hasVertex(source)) {
                 for (Vertex<L> testVertex : vertices) {
-                    if (testVertex.getName() == source && testVertex.getTargets().contains(target)) {
+                    if (testVertex.getName().equals(source) && testVertex.getTargets().contains(target)) {
                         result = testVertex.getWeight(target);
                         testVertex.setTarget(target, weight);
                         checkRep();
@@ -92,7 +92,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         int remIndex = 0;
         if (hasVertex(vertex)) {
             for (Vertex<L> testVertex : vertices) {
-                if (testVertex.getName() == vertex) {
+                if (testVertex.getName().equals(vertex)) {
                     remIndex = vertices.indexOf(testVertex);
                 }
                 if (testVertex.getTargets().contains(vertex)) {
@@ -132,7 +132,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     public Map<L, Integer> targets(L source) {
         Map<L, Integer> result = new HashMap<>();
         for (Vertex<L> vertex : vertices) {
-            if (vertex.getName() == source) {
+            if (vertex.getName().equals(source)) {
                 result = vertex.getTargetsMap();
             }
         }
@@ -147,7 +147,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
      */
     private boolean hasVertex(L vertex) {
         for (Vertex<L> testVertex : vertices) {
-            if (testVertex.getName() == vertex) {
+            if (testVertex.getName().equals(vertex)) {
                 return true;
             }
         }

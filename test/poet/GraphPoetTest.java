@@ -43,11 +43,12 @@ public class GraphPoetTest {
     
     // tests
 
-    // test for Graph creation
+    // test for Graph creation. For debugging...
     @Test
     public void GraphBuildingTest() throws IOException {
-        File givenCorpus = new File("test/poet/testText.txt");
+        File givenCorpus = new File("test/poet/repeatedCorpusCaseVariantWords.txt");
         GraphPoet graph = new GraphPoet(givenCorpus);
+
     }
 
     // corpus doesn't exist
@@ -80,18 +81,18 @@ public class GraphPoetTest {
     // all spaces are one whitespace/newline char long, words contains letters only
     @Test
     public void testPoemLettersOnlySingleSpaces() throws IOException {
-        File givenCorpus = new File("test.poem/mugar-omni-theater.txt");
+        File givenCorpus = new File("test/poet/mugar-omni-theater.txt");
         GraphPoet graph = new GraphPoet(givenCorpus);
-        String input = "Test the Theater system";
+        String input = "Test the Theater system.";
         String outputPoem = graph.poem(input);
-        String correctPoem = "Test of the Theater sound system";
+        String correctPoem = "Test of the Theater sound system.";
         assertEquals(correctPoem, outputPoem);
     }
 
     // spaces have different space lenghts, words contains letters and numbers
     @Test
     public void testPoemLettersNumbersDifferentSpaces() throws IOException {
-        File givenCorpus = new File("test.poem/mugar-omni-theater.txt");
+        File givenCorpus = new File("test/poet/differentWhitespace.txt");
         GraphPoet graph = new GraphPoet(givenCorpus);
         String input = "Stick a line down and quick and you're done";
         String outputPoem = graph.poem(input);
@@ -140,7 +141,7 @@ public class GraphPoetTest {
         String input = "Aren't they the of all the days of our lives?";
         String outputPoem = graph.poem(input);
         String oneCorrectPoem = "Aren't they the best of all the days of our lives?";
-        String otherCorrectPoem = "Aren't they the worst of all the days of our lives";
+        String otherCorrectPoem = "Aren't they the worst of all the days of our lives?";
         assertTrue(outputPoem.equals(oneCorrectPoem) || outputPoem.equals(otherCorrectPoem));
     }
 
@@ -155,4 +156,10 @@ public class GraphPoetTest {
         assertEquals(correctPoem, outputPoem);
     }
 
+    @Test
+    public void testToString() throws IOException {
+        File giveCorpus = new File("test/poet/mugar-omni-theater.txt");
+        GraphPoet graph = new GraphPoet(giveCorpus);
+        assertEquals("Graph contains 11 vertices and 10 edges", graph.toString());
+    }
 }
