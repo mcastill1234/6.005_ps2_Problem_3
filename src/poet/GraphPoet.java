@@ -124,8 +124,6 @@ public class GraphPoet {
 
         for (String currentWord : inputAsList) {
 
-            boolean addedBridge = false;
-
             if (inputAsList.indexOf(currentWord) == 0) {
                 outputPoem += currentWord;
             }
@@ -140,24 +138,25 @@ public class GraphPoet {
                 Set<String> targetsOfpw = graph.targets(previousWordLC).keySet();
                 Set<String> sourcesOfcw = graph.sources(currentWordLC).keySet();
 
-                for (String bridgeWord : targetsOfpw) {
+                String maxBridgeWord = "";
+                int maxWeightBridge = 0;
 
-                    boolean foundBridge = sourcesOfcw.contains(bridgeWord);
-
-                    if (pwInGraph && cwInGraph && foundBridge) {
-                        outputPoem += " ";
-                        outputPoem += bridgeWord;
-                        outputPoem += " ";
-                        outputPoem += currentWord;
-
-                        addedBridge = true;
-                        break;
+                for (String currentBridgeWord : targetsOfpw) {
+                    int currentWeights = 0;
+                    if (pwInGraph && cwInGraph && sourcesOfcw.contains(currentBridgeWord)) {
+                        currentWeights = graph.sources(currentBridgeWord).get(previousWordLC) +
+                                graph.targets(currentBridgeWord).get(currentWordLC);
+                        if (currentWeights > maxWeightBridge) {
+                            maxWeightBridge = currentWeights;
+                            maxBridgeWord = currentBridgeWord;
+                        }
                     }
                 }
-
-                if (!addedBridge) {
-                    outputPoem += " ";
-                    outputPoem += currentWord;
+                if (maxWeightBridge != 0) {
+                    outputPoem += " " + maxBridgeWord + " " + currentWord;
+                }
+                else {
+                    outputPoem += " " + currentWord;
                 }
             }
             previousWord = currentWord;

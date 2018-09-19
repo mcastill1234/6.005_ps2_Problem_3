@@ -140,9 +140,8 @@ public class GraphPoetTest {
         GraphPoet graph = new GraphPoet(giveCorpus);
         String input = "Aren't they the of all the days of our lives?";
         String outputPoem = graph.poem(input);
-        String oneCorrectPoem = "Aren't they the best of all the days of our lives?";
-        String otherCorrectPoem = "Aren't they the worst of all the days of our lives?";
-        assertTrue(outputPoem.equals(oneCorrectPoem) || outputPoem.equals(otherCorrectPoem));
+        String correctPoem = "Aren't they the fastest of all the days of our lives?";
+        assertEquals(correctPoem, outputPoem);
     }
 
     // for all poem words, adjacency graph has no words weighted between them
